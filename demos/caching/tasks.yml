@@ -1,0 +1,9 @@
+version: 3
+
+tasks:
+
+  build-image/*:
+    vars:
+      VARIANT: '{{index .MATCH 0}}'
+    desc: Build Image
+    cmd: docker build -f demos/caching/Dockerfile.{{.VARIANT}} -t caching-{{.VARIANT}}-notify-service-api .

@@ -1,0 +1,5 @@
+FROM scratch
+
+COPY --chmod=777 build/native/nativeCompile/notify /application
+
+ENTRYPOINT ["/application"]

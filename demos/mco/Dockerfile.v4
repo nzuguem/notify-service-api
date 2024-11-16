@@ -1,0 +1,8 @@
+FROM eclipse-temurin:21-jre
+
+WORKDIR /application
+
+COPY demos/mco/run.sh ./run.sh
+COPY target/notify-service-api.jar ./app.jar
+
+ENTRYPOINT ["/application/run.sh"]

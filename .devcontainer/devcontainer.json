@@ -1,0 +1,65 @@
+{
+    "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+
+    "features": {
+        "ghcr.io/devcontainers/features/docker-in-docker:2": {},
+        "ghcr.io/devcontainers/features/git:1": {},
+        "ghcr.io/devcontainers/features/github-cli:1": {},
+        "ghcr.io/devcontainers/features/java:1": {
+            "installMaven" : true,
+            "jdkDistro": "tem",
+            "version": "21"
+        },
+        "ghcr.io/guiyomh/features/vim": {},
+        "ghcr.io/devcontainers-extra/features/dive:1": {},
+        "ghcr.io/devcontainers-extra/features/grype:1": {},
+        "ghcr.io/devcontainers-extra/features/syft:1": {},
+        "ghcr.io/devcontainers-extra/features/go-task:1": {},
+        "ghcr.io/devcontainers-contrib/features/fzf:1": {},
+    },
+    "customizations": {
+        "vscode": {
+            "settings": { 
+                "java.configuration.updateBuildConfiguration": "automatic"
+			},
+            "extensions": [
+                "mhutchie.git-graph",
+                "redhat.vscode-yaml",
+                "EditorConfig.EditorConfig",
+                "vscjava.vscode-java-pack",
+                "Oracle.oracle-java",
+                "vscjava.vscode-maven",
+                "task.vscode-task",
+                "redhat.java",
+                "vmware.vscode-spring-boot",
+                "vscjava.vscode-spring-boot-dashboard",
+                "vmware.vscode-boot-dev-pack"
+            ]
+        }
+  },
+  "forwardPorts": [
+    8080,
+    8081,
+    5432,
+    3000,
+    8025
+  ],
+  "portsAttributes": {
+    "8080": {
+      "label": "notify-service-api"
+    },
+    "8081": {
+      "label": "pgadmin"
+    },
+    "5432": {
+      "label": "customers-store"
+    },
+    "3000": {
+      "label": "grafana"
+    },
+    "8025": {
+      "label": "mailpit"
+    }
+  },
+  "postStartCommand": "bash .devcontainer/scripts/postStartCommand.sh"
+}

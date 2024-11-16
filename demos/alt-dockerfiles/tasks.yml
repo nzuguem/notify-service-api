@@ -1,0 +1,26 @@
+version: 3
+
+tasks:
+  build-image/cnb:
+    desc: Build OCI Image with CNB/Spring-Boot
+    cmd: mvn spring-boot:build-image
+  
+  run-image/cnb:
+    desc: Run CNB Image
+    deps:
+      - task: build-image/cnb
+    cmd: docker run --rm --net host $DOCKER_LOGS_OPTS cnb-notify-service-api
+  
+  build-image/jib-docker:
+    desc: Build OCI Image with CNB/Spring-Boot
+    cmd: mvn jib:dockerBuild
+  
+  run-image/jib:
+    desc: Run JIB Image
+    deps:
+      - task: build-image/jib-docker
+    cmd: docker run --rm --net host $DOCKER_LOGS_OPTS jib-notify-service-api
+  
+  build-image/jib-tar:
+    desc: Build OCI Image with CNB/Spring-Boot
+    cmd: mvn jib:buildTar

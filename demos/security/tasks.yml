@@ -1,0 +1,38 @@
+version: 3
+
+tasks:
+  generate-sca/jib:
+    desc: Generate SCA for JIB Image
+    cmds: 
+      - syft scan jib-notify-service-api -o cyclonedx-json > target/sca-jib.json
+
+  scan-vuln/jib:
+    deps:
+      - generate-sca/jib
+    desc: Scan vulnerability of JIB Image
+    cmds: 
+      - grype sbom:./target/sca-jib.json
+
+  generate-sca/cnb:
+    desc: Generate SCA for CNB Image
+    cmds:
+      - syft scan cnb-notify-service-api -o cyclonedx-json > target/sca-cnb.json
+  
+  scan-vuln/cnb:
+    deps:
+      - generate-sca/cnb
+    desc: Scan vulnerability of CNB Image
+    cmds: 
+      - grype sbom:./target/sca-cnb.json
+
+  generate-sca/vanilla:
+    desc: Generate SCA
+    cmds:
+      - syft scan vanilla-notify-service-api -o cyclonedx-json > target/sca-vanilla.json
+  
+  scan-vuln/vanilla:
+    deps:
+      - generate-sca/vanilla
+    desc: Scan vulnerability of Vanilla Image
+    cmds: 
+      - grype sbom:./target/sca-vanilla.json

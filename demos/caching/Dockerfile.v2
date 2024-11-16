@@ -1,0 +1,10 @@
+FROM ubuntu:jammy
+
+WORKDIR /application
+
+RUN apt-get update
+RUN apt-get -y install openjdk-21-jdk
+
+COPY target/notify-service-api.jar ./app.jar
+
+ENTRYPOINT ["java", "-jar", "/application/app.jar"]

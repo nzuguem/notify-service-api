@@ -1,0 +1,7 @@
+FROM eclipse-temurin:21-jre
+
+WORKDIR /application
+
+COPY target/notify-service-api.jar ./app.jar
+
+ENTRYPOINT ["java", "-jar", "/application/app.jar"]

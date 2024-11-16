@@ -1,0 +1,41 @@
+FROM eclipse-temurin:21 AS runtime-builder
+
+WORKDIR /runtime
+
+COPY target/notify-service-api.jar ./app.jar
+
+RUN <<EOF
+java -Djarmode=tools -jar app.jar extract --destination application
+
+jdeps \
+    --ignore-missing-deps \
+    --print-module-deps \
+    --recursive \
+    --multi-release 21 \
+    --class-path 'application/lib/*' \
+    app.jar > jre-deps.info \
+    
+jlink \
+    --verbose \
+    --output jre \
+    --strip-debug \
+    --no-man-pages \
+    --no-header-files \
+    --compress=2 \
+    --add-modules $(cat jre-deps.info)
+EOF
+
+
+FROM debian:buster-slim
+
+ENV JAVA_HOME=/runtime/jre
+ENV PATH=$JAVA_HOME/bin:$PATH
+
+WORKDIR /application
+
+COPY demos/mco/run.sh ./run.sh
+COPY target/notify-service-api.jar ./app.jar
+
+COPY --from=runtime-builder /runtime/jre $JAVA_HOME
+
+ENTRYPOINT ["/application/run.sh"]
