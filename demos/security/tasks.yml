@@ -1,0 +1,18 @@
+version: 3
+
+tasks:
+  generate-sca/*:
+    desc: Generate SCA for Image
+    vars:
+      VARIANT: '{{index .MATCH 0}}'
+    cmds: 
+      - syft scan {{.VARIANT}}-notify-service-api -o cyclonedx-json > target/sca-{{.VARIANT}}.json
+
+  scan-vuln/*:
+    vars:
+      VARIANT: '{{index .MATCH 0}}'
+    deps:
+      - generate-sca/{{.VARIANT}}
+    desc: Scan vulnerability of Image
+    cmds: 
+      - grype sbom:./target/sca-{{.VARIANT}}.json

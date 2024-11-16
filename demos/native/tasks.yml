@@ -1,0 +1,18 @@
+version: 3
+
+tasks:
+
+  build-image/*:
+    vars:
+      VARIANT: '{{index .MATCH 0}}'
+    desc: Build Image
+    cmd: docker build -f demos/native/Dockerfile.{{.VARIANT}} -t native-{{.VARIANT}}-notify-service-api .
+  
+  run-image/*/*:
+    deps:
+      - build-image/{{.VARIANT}}
+    vars:
+      VARIANT: '{{index .MATCH 0}}'
+      ENV: '{{index .MATCH 1}}'
+    desc: Run Image
+    cmd: docker run -it --net host $DOCKER_LOGS_OPTS  --rm  --env-file config-managment/{{.ENV}}.properties native-{{.VARIANT}}-notify-service-api

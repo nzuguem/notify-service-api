@@ -1,0 +1,23 @@
+x-default-logging: &default-logging
+ driver: json-file
+ options:
+   max-size: 5m
+   max-file: "2"
+   max-buffer-size: 4m
+   mode: non-blocking
+   tag: "{{.Name}}|{{.ImageName}}|{{.ID}}"
+
+services:
+  notify-service-api:
+    container_name: notify-service-api
+    build:
+      context: .
+      dockerfile: Dockerfile.init
+    logging: *default-logging
+    network_mode: host
+    restart: on-failure
+    # docker compose watch
+    develop:
+      watch:
+        - path: src/main
+          action: rebuild

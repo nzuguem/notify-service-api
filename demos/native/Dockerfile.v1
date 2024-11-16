@@ -1,0 +1,5 @@
+FROM gcr.io/distroless/java21-debian12
+
+COPY --chmod=777 target/notify-service-api /application
+
+ENTRYPOINT ["/application"]

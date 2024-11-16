@@ -1,0 +1,25 @@
+x-default-logging: &default-logging
+ driver: json-file
+ options:
+   max-size: 5m
+   max-file: "2"
+   max-buffer-size: 4m
+   mode: non-blocking
+   tag: "{{.Name}}|{{.ImageName}}|{{.ID}}"
+   
+services:
+  lgtm:
+    image: grafana/otel-lgtm:0.7.8
+    container_name: lgtm
+    environment:
+      ENABLE_LOGS_OTELCOL: "true"
+    volumes:
+      - ./grafana/dashboards/micrometer-dashboard.yaml:/otel-lgtm/grafana/conf/provisioning/dashboards/micrometer-dashboard.yaml
+      - ./grafana/dashboards/grafana-dashboard-micrometer.json:/otel-lgtm/custom/grafana-dashboard-micrometer.json
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - ./otel-collector/config.yml:/otel-lgtm/otelcol-config.yaml
+    logging: *default-logging
+    ports:
+      - 3000:3000 # Grafana
+      - 4317:4317 # OTLP gRPC receiver
+      - 4318:4318 # OTLP http receiver

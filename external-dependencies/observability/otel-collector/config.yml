@@ -1,0 +1,106 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317
+      http:
+        endpoint: 0.0.0.0:4318
+  prometheus/collector:
+    config:
+      scrape_configs:
+        - job_name: 'opentelemetry-collector'
+          static_configs:
+            - targets: ['localhost:8888']
+  filelog:
+    include:
+      - /var/lib/docker/containers/*/*-json.log
+    encoding: utf-8
+    fingerprint_size: 1kb
+    force_flush_period: "0"
+    include_file_name: false
+    include_file_path: true
+    max_concurrent_files: 1024
+    max_log_size: 1MiB
+    operators:
+      - id: parser-docker
+        timestamp:
+          layout: '%Y-%m-%dT%H:%M:%S.%LZ'
+          parse_from: attributes.time
+        type: json_parser
+      - id: extract_metadata_from_docker_tag
+        parse_from: attributes.attrs.tag
+        regex: ^(?P<name>[^\|]+)\|(?P<image_name>[^\|]+)\|(?P<id>[^$]+)$
+        type: regex_parser
+        if: 'attributes?.attrs?.tag != nil'
+      - from: attributes.name
+        to: resource["docker.container.name"]
+        type: move
+        if: 'attributes?.name != nil'
+      - from: attributes.image_name
+        to: resource["docker.image.name"]
+        type: move
+        if: 'attributes?.image_name != nil'
+      - from: attributes.trace_id
+        to: resource["trace.id"]
+        type: move
+        if: 'attributes?.trace_id != nil'
+      - from: attributes.span_id
+        to: resource["span.id"]
+        type: move
+        if: 'attributes?.span_id != nil'
+      - from: attributes.id
+        to: resource["docker.container.id"]
+        type: move
+        if: 'attributes?.id != nil'
+      - from: attributes.stream
+        to: resource["log.io.stream"]
+        type: move
+      - field: attributes.attrs.tag
+        type: remove
+        if: 'attributes?.attrs?.tag != nil'
+      - from: attributes.log
+        to: body
+        type: move
+    poll_interval: 200ms
+    start_at: beginning
+
+processors:
+  batch:
+
+exporters:
+  otlphttp/metrics:
+    endpoint: http://localhost:9090/api/v1/otlp
+    tls:
+      insecure: true
+  otlphttp/traces:
+    endpoint: http://localhost:4418
+    tls:
+      insecure: true
+  otlphttp/logs:
+    endpoint: http://localhost:3100/otlp
+    tls:
+      insecure: true
+  debug/metrics:
+    verbosity: detailed
+  debug/traces:
+    verbosity: detailed
+  debug/logs:
+    verbosity: detailed
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      processors: [batch]
+      exporters: [otlphttp/traces]
+      #exporters: [otlphttp/traces,debug/traces]
+    metrics:
+      receivers: [otlp,prometheus/collector]
+      processors: [batch]
+      exporters: [otlphttp/metrics]
+      #exporters: [otlphttp/metrics,debug/metrics]
+    logs:
+      receivers: [otlp, filelog]
+      processors: [batch]
+      exporters: [otlphttp/logs]
+      #exporters: [otlphttp/logs,debug/logs]
