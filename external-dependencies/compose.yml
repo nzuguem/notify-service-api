@@ -1,0 +1,4 @@
+include:
+  - path: smtp/compose.yml
+  - path: database/compose.yml
+  - path: observability/compose.yml

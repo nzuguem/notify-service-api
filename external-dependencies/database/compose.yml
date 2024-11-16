@@ -1,0 +1,37 @@
+x-default-logging: &default-logging
+ driver: json-file
+ options:
+   max-size: 5m
+   max-file: "2"
+   max-buffer-size: 4m
+   mode: non-blocking
+   tag: "{{.Name}}|{{.ImageName}}|{{.ID}}"
+
+services:
+  customers-store:
+    image: postgres:16.5-alpine
+    container_name: customers-store
+    ports:
+      - 5432:5432
+    logging: *default-logging
+    environment:
+      POSTGRES_USER: customer
+      POSTGRES_PASSWORD: customer
+      POSTGRES_DB: customers
+    configs:
+      - source: customers-store-init
+        target: /docker-entrypoint-initdb.d/1-customer-init.sql
+  
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: pgadmin
+    ports:
+      - 8081:80
+    logging: *default-logging
+    environment:
+      PGADMIN_DEFAULT_EMAIL: kevin@nzuguem.me
+      PGADMIN_DEFAULT_PASSWORD: admin
+
+configs:
+  customers-store-init:
+    file: ./init/customer.sql

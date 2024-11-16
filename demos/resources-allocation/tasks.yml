@@ -1,0 +1,65 @@
+version: 3
+
+tasks:
+  get-memory:
+    desc: Get Memory on Host.
+    cmd: free -h
+  
+  0-show-oomkiller:
+    desc: Show OOM-Killer in action.
+    cmds:
+      - cmd:
+          docker run -it --name oomkiller
+            -m 100m --memory-swap 100m
+            eclipse-temurin:8 java -Xms100m -XX:+AlwaysPreTouch -version
+        ignore_error: true
+      - docker inspect oomkiller | grep OOMKilled
+      - docker rm oomkiller -f
+
+
+  1-1-java-8u121:
+    cmd: docker run --rm -m 100MB openjdk:8u121 java -XshowSettings:vm -version
+
+  1-1-java-8u131:
+    cmd: docker run --rm -m 100MB openjdk:8u131 java -XshowSettings:vm -version
+
+  1-2-java-8u131-witch-options:
+    cmds: 
+      - docker run --rm -m 100MB openjdk:8u131 java
+          -XX:+UnlockExperimentalVMOptions
+          -XX:+UseCGroupMemoryLimitForHeap
+          -XshowSettings:vm -version
+      - echo "OpenJDK 64-Bit Server VM warning -> Unable to open cgroup memory limit file /sys/fs/cgroup/memory/memory.limit_in_bytes (No such file or directory)"
+  
+  1-3-java-8u131-witch-options-hack:
+    cmd:
+      docker run --rm -m 100MB openjdk:8u131 bash -c 'java
+          -XX:+UnlockExperimentalVMOptions
+          -XX:+UseCGroupMemoryLimitForHeap
+          -XX:MaxRAM=$(cat /sys/fs/cgroup/memory.max)
+          -XshowSettings:vm -version'
+  
+  1-4-java-10-witch-options-hack:
+    cmd: 
+      docker run --rm -m 1GB openjdk:10 bash -c 'java
+        -XX:MaxRAM=$(cat /sys/fs/cgroup/memory.max)
+        -XX:+PrintFlagsFinal
+        -XshowSettings:vm -version 
+        | grep -E "UseContainerSupport | InitialRAMPercentage | MaxRAMPercentage | MinRAMPercentage"'
+
+  1-5-java-10-witch-options-memory-percentage-hack:
+    cmd: 
+      docker run --rm -m 1GB openjdk:10 bash -c 'java
+        -XX:MaxRAM=$(cat /sys/fs/cgroup/memory.max)
+        -XX:MinRAMPercentage=50
+        -XX:InitialRAMPercentage=80
+        -XX:MaxRAMPercentage=80
+        -XX:+PrintFlagsFinal
+        -XshowSettings:vm -version
+        | grep -E "HeapSize"'
+  
+  1-6-java-15:
+    cmd: 
+      docker run --rm -m 1GB openjdk:15 java
+        -XX:+PrintFlagsFinal
+        -XshowSettings:vm -version

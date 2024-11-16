@@ -1,0 +1,109 @@
+version: 3
+
+# Global Properties
+silent: false
+
+env:
+  DOCKER_LOGS_OPTS: >-
+    --log-driver=json-file
+    --log-opt max-size=5m
+    --log-opt max-file=2
+    --log-opt max-buffer-size=4m
+    --log-opt mode=non-blocking
+    --log-opt tag="{{.Name}}|{{.ImageName}}|{{.ID}}" 
+
+includes:
+  res-alloc:
+    taskfile: ./demos/resources-allocation/tasks.yml
+    dir: ./demos/resources-allocation
+  alt-df:
+    taskfile: ./demos/alt-dockerfiles/tasks.yml
+  security:
+    taskfile: ./demos/security/tasks.yml
+  caching:
+    taskfile: ./demos/caching/tasks.yml
+  sizing:
+    taskfile: ./demos/sizing/tasks.yml
+  mco:
+    taskfile: ./demos/mco/tasks.yml
+  native:
+    taskfile: ./demos/native/tasks.yml
+
+tasks:
+  default:
+    desc: List Tasks.
+    cmd: task -l
+
+  run-app:
+    desc: Run Application.
+    cmd: mvn spring-boot:run
+  
+  build-app:
+    desc: Build Application.
+    cmd: mvn clean package
+  
+  build-app-native:
+    desc: Build Native Application.
+    cmd: mvn -Pnative native:compile
+  
+  run-app-with-tc-devservices:
+    desc: Run Application with Testcontainers DevServices
+    cmd: mvn spring-boot:test-run
+  
+  run-app-with-compose-devservices:
+    desc: Run Application with Compose DevServices
+    cmd: docker compose watch
+  
+  build-image:
+    desc: Build Vanilla Image.
+    cmd: docker build -t vanilla-notify-service-api .
+  
+  run-image:
+    desc: Run Vanilla Image
+    deps:
+      - task: build-image
+    cmd: docker run --rm --net host $DOCKER_LOGS_OPTS vanilla-notify-service-api
+  
+  send-cart-abandonment-mail:
+    desc: Send Cart Abandonment Mail.
+    cmd: >-
+        curl --location 'http://localhost:8080/notify'
+        --header 'Content-Type: application/json'
+        --data '{
+            "customerId": "47",
+            "notificationType": "CART_ABANDONMENT",
+            "channel": "SMTP",
+            "context": {
+                "products": "vodka, doritos",
+                "cartLink": "htts://shop.nzuguem.me/carts/XYZ"
+            }
+        }'
+  send-cart-abandonment-sms:
+    desc: Send Cart Abandonment SMS.
+    cmd: >-
+        curl --location 'http://localhost:8080/notify'
+        --header 'Content-Type: application/json'
+        --data '{
+            "customerId": "47",
+            "notificationType": "CART_ABANDONMENT",
+            "channel": "SMS",
+            "context": {
+                "products": "vodka, doritos",
+                "cartLink": "htts://shop.nzuguem.me/carts/XYZ"
+            }
+        }'
+  send-promotion-mail-comsume-heap-space:
+    desc: Send Cart Abandonment Mail.
+    cmd: >-
+        curl --location 'http://localhost:8080/notify'
+        --header 'Content-Type: application/json'
+        --data '{
+            "customerId": "37",
+            "notificationType": "PROMOTION",
+            "channel": "SMTP",
+            "context": {
+                "deadline": "25/11/2015 - 23:59:59",
+                "promotionLink": "htts://shop.nzuguem.me/promotions/XYZ",
+                "percentage": "80"
+            }
+        }'
