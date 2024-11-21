@@ -1,8 +1,6 @@
 package me.nzuguem.notify.models;
 
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -15,27 +13,11 @@ public record NotifyRequest(
     Type notificationType,
     Map<String, String> context,
     @NotNull(message = "channel is mandatory")
-    Channel channel) {  
+    Channel channel) { 
 
-        public void validateContext() {
-
-            var contextKeysType = new HashSet<>(this.notificationType.getContextKeys());
-
-            if (contextKeysType.isEmpty()) {
-                return;
+        public void validate() {
+            if (!this.notificationType.validate(this.context)) {
+                throw new ContextNoMatchTypeException("Parameters %s are mandatory for the notification type %s".formatted(this.notificationType.getContextKeys(), notificationType));
             }
-
-            if (
-                Objects.isNull(this.context) ||
-                !Objects.equals(contextKeysType, this.context.keySet())
-                ) {
-                throw new ContextNoMatchTypeException("Parameters %s are mandatory for the notification type %s".formatted(contextKeysType, notificationType));
-            }
-
-            this.context.values()
-                .stream()
-                .filter(String::isBlank)
-                .findAny()
-                .ifPresent(__ -> {throw new ContextNoMatchTypeException("Parameters %s are mandatory for the notification type %s".formatted(contextKeysType, notificationType));});
         }
-}
+     }

@@ -23,7 +23,7 @@ public class NotifyResource {
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody NotifyRequest notifyRequest) {
 
-        notifyRequest.validateContext();
+        notifyRequest.validate();
 
         this.notifyBusiness.notify(notifyRequest);
     

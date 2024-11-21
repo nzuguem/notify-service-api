@@ -5,18 +5,20 @@ import java.util.List;
 import java.util.regex.Pattern;
 import java.util.Map;
 
+import me.nzuguem.notify.models.context.Context;
+
 public enum Type {
     
-    ORDER_CONFIRMATION("Thank you for your order", List.of("orderNumber", "trackingLink")), 
-    PROMOTION("Get -${percentage}% off your favourite items", List.of("deadline", "promotionLink", "percentage")), 
-    CART_ABANDONMENT("Your basket is waiting for you", List.of("products", "cartLink"));
+    ORDER_CONFIRMATION("Thank you for your order", Context.orderConfirmation()), 
+    PROMOTION("Get -${percentage}% off your favourite items", Context.promotion()), 
+    CART_ABANDONMENT("Your basket is waiting for you", Context.cartAbandonment());
 
     private String subject;
-    private List<String> contextKeys;
+    private Context context;
 
-    Type(String subject, List<String> contextKeys) {
+    Type(String subject, Context context) {
         this.subject = subject;
-        this.contextKeys = contextKeys;
+        this.context = context;
     }
 
     private List<String> getContextKeysInSubject() {
@@ -46,7 +48,11 @@ public enum Type {
         return subject;
     }
 
+    public boolean validate(Map<String, String> context) {
+        return this.context.validate(context);
+    }
+
     public List<String> getContextKeys() {
-        return this.contextKeys;
+        return this.context.variables();
     }
 }
