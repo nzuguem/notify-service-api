@@ -15,7 +15,9 @@
         "ghcr.io/devcontainers-extra/features/grype:1": {},
         "ghcr.io/devcontainers-extra/features/syft:1": {},
         "ghcr.io/devcontainers-extra/features/go-task:1": {},
-        "ghcr.io/devcontainers-contrib/features/fzf:1": {}
+        "ghcr.io/devcontainers-contrib/features/fzf:1": {},
+        "ghcr.io/jsburckhardt/devcontainer-features/copa:1": {},
+        "ghcr.io/itsmechlark/features/trivy:1": {}
     },
     "customizations": {
         "vscode": {

@@ -1,15 +1,4 @@
-FROM eclipse-temurin:21 AS extracted
-
-WORKDIR /application
-
-COPY target/notify-service-api.jar ./app.jar
-
-RUN <<EOF
-java -Djarmode=tools -jar app.jar extract --destination extracted
-EOF
-
-
+ARG APP_NAME=notify-service-api
+## Build from demos/mco/ops/Dockerfile
+## docker build -t nzuguem/java-runtime:21.0.5_11-jre -f demos/mco/ops/Dockerfile --push .
 FROM nzuguem/java-runtime:21.0.5_11-jre
-
-COPY --from=extracted /application/extracted/lib ./lib
-COPY --from=extracted /application/extracted/app.jar ./
