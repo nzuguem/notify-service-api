@@ -1,8 +1,9 @@
-package me.nzuguem.notify.services.notifications;
+package me.nzuguem.notify.services.notifications.factory;
 
 import org.springframework.stereotype.Component;
 
 import me.nzuguem.notify.models.Channel;
+import me.nzuguem.notify.services.notifications.Sender;
 import me.nzuguem.notify.services.notifications.sms.SmsSender;
 import me.nzuguem.notify.services.notifications.smtp.SmtpSender;
 
@@ -19,11 +20,11 @@ public class SenderFactory {
     }
 
     public Sender getSender(Channel channel) {
-        
+
         return switch (channel) {
-            case SMS -> smsSender;
+            case SMS -> throw new UnsupportedOperationException("Unimplemented method 'send' for SMS");
             case SMTP -> smtpSender;
         };
     }
-    
+
 }

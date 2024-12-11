@@ -27,8 +27,15 @@
 	</scm>
 	<properties>
 		<java.version>21</java.version>
+        <jte.version>3.1.15</jte.version>
+        <me.nzuguem.notify.jte.packageName>me.nzuguem.notify.jte.generated</me.nzuguem.notify.jte.packageName>
 	</properties>
 	<dependencies>
+        <dependency>
+            <groupId>gg.jte</groupId>
+            <artifactId>jte</artifactId>
+            <version>${jte.version}</version>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-data-jdbc</artifactId>
@@ -45,7 +52,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-
         <dependency>
             <groupId>io.micrometer</groupId>
             <artifactId>micrometer-tracing-bridge-otel</artifactId>
@@ -145,6 +151,25 @@
                         <image>jib-${project.artifactId}</image>
                     </to>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>gg.jte</groupId>
+                <artifactId>jte-maven-plugin</artifactId>
+                <version>${jte.version}</version>
+                <configuration>
+                    <sourceDirectory>${project.basedir}/src/main/jte</sourceDirectory>
+                    <targetDirectory>${project.build.directory}/classes</targetDirectory>
+                    <contentType>Html</contentType>
+                    <packageName>${me.nzuguem.notify.jte.packageName}</packageName>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>process-classes</phase>
+                        <goals>
+                            <goal>precompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
 		</plugins>
 	</build>

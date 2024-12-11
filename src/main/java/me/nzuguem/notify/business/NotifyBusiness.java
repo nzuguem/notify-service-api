@@ -6,7 +6,7 @@ import me.nzuguem.notify.exceptions.CustomerNotFoundException;
 import me.nzuguem.notify.models.NotifyRequest;
 import me.nzuguem.notify.models.SenderRequest;
 import me.nzuguem.notify.services.dao.Customers;
-import me.nzuguem.notify.services.notifications.SenderFactory;
+import me.nzuguem.notify.services.notifications.factory.SenderFactory;
 
 @Component
 public class NotifyBusiness {
@@ -22,17 +22,17 @@ public class NotifyBusiness {
 
     public void notify(NotifyRequest notifyRequest) {
 
+        var sender = this.senderFactory.getSender(notifyRequest.channel());
+
         var customer = customers.get(notifyRequest.customerId())
             .orElseThrow(() -> new CustomerNotFoundException("Customer %s not found".formatted(notifyRequest.customerId())));
 
-        var sender = senderFactory.getSender(notifyRequest.channel());
-
-        var senderRequest = new SenderRequest(customer, 
-            notifyRequest.notificationType(), 
+        var senderRequest = new SenderRequest(customer,
+            notifyRequest.notificationType(),
             notifyRequest.channel(),
             notifyRequest.context());
 
         sender.send(senderRequest);
     }
-    
+
 }

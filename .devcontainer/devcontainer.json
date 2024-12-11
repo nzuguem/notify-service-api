@@ -22,7 +22,8 @@
     "customizations": {
         "vscode": {
             "settings": {
-                "java.configuration.updateBuildConfiguration": "automatic"
+                "java.configuration.updateBuildConfiguration": "automatic",
+                "editor.defaultFormatter": "EditorConfig.EditorConfig"
 			},
             "extensions": [
                 "mhutchie.git-graph",

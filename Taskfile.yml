@@ -10,7 +10,7 @@ env:
     --log-opt max-file=2
     --log-opt max-buffer-size=4m
     --log-opt mode=non-blocking
-    --log-opt tag="{{.Name}}|{{.ImageName}}|{{.ID}}" 
+    --log-opt tag="{{.Name}}|{{.ImageName}}|{{.ID}}"
 
 includes:
   res-alloc:
@@ -37,33 +37,33 @@ tasks:
   run-app:
     desc: Run Application.
     cmd: mvn spring-boot:run
-  
+
   build-app:
     desc: Build Application.
     cmd: mvn clean package
-  
+
   build-app-native:
     desc: Build Native Application.
     cmd: mvn -Pnative native:compile
-  
+
   run-app-with-tc-devservices:
     desc: Run Application with Testcontainers DevServices
     cmd: mvn spring-boot:test-run
-  
+
   run-app-with-compose-devservices:
     desc: Run Application with Compose DevServices
     cmd: docker compose watch
-  
+
   build-image:
     desc: Build Vanilla Image.
     cmd: docker build -t vanilla-notify-service-api .
-  
+
   run-image:
     desc: Run Vanilla Image
     deps:
       - task: build-image
     cmd: docker run --rm --net host $DOCKER_LOGS_OPTS vanilla-notify-service-api
-  
+
   send-cart-abandonment-mail:
     desc: Send Cart Abandonment Mail.
     cmd: >-
