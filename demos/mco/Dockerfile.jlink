@@ -14,7 +14,7 @@ jdeps \
     --multi-release 21 \
     --class-path 'application/lib/*' \
     app.jar > jre-deps.info \
-    
+
 jlink \
     --verbose \
     --output jre \
@@ -33,7 +33,7 @@ ENV PATH=$JAVA_HOME/bin:$PATH
 
 WORKDIR /application
 
-COPY demos/mco/run.sh ./run.sh
+COPY demos/mco/ops/run.sh ./run.sh
 COPY target/notify-service-api.jar ./app.jar
 
 COPY --from=runtime-builder /runtime/jre $JAVA_HOME

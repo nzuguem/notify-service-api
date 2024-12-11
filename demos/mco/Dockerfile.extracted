@@ -14,7 +14,7 @@ jdeps \
     --multi-release 21 \
     --class-path 'application/lib/*' \
     app.jar > jre-deps.info \
-    
+
 jlink \
     --verbose \
     --output jre \
@@ -33,7 +33,7 @@ ENV PATH=$JAVA_HOME/bin:$PATH
 
 WORKDIR /application
 
-COPY demos/mco/run.sh ./run.sh
+COPY demos/mco/ops/run.sh ./run.sh
 
 COPY --from=runtime-builder /runtime/application/lib ./lib
 COPY --from=runtime-builder /runtime/application/app.jar ./

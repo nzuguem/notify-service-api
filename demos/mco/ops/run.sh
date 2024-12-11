@@ -2,4 +2,4 @@
 
 echo "Do something..."
 
-exec java ${JAVA_OPTS} -jar /application/app.jar ${@}
+exec java ${JAVA_OPTS} -jar /application/app.jar  ${@}

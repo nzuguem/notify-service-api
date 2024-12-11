@@ -1,4 +1,4 @@
-package me.nzuguem.notify.configurations;
+package me.nzuguem.notify.configurations.feature_flag;
 
 import java.util.HashMap;
 
@@ -10,12 +10,28 @@ import dev.openfeature.sdk.OpenFeatureAPI;
 import dev.openfeature.contrib.providers.gofeatureflag.GoFeatureFlagProvider;
 import dev.openfeature.contrib.providers.gofeatureflag.GoFeatureFlagProviderOptions;
 import dev.openfeature.contrib.providers.gofeatureflag.exception.InvalidOptions;
+import dev.openfeature.sdk.Client;
 import dev.openfeature.sdk.ImmutableContext;
 import dev.openfeature.sdk.Value;
 import dev.openfeature.sdk.exceptions.OpenFeatureError;
+import me.nzuguem.notify.configurations.feature_flag.hooks.CorporateHook;
 
 @Configuration
 public class OpenFeatureConfiguration {
+
+    @Bean
+    public FeatureProvider goFeatureFlagProvider(
+        @org.springframework.beans.factory.annotation.Value("${notify.goff.url}") String goffUrl
+    ) throws InvalidOptions {
+
+        var goFeatureFlagProviderOptions = GoFeatureFlagProviderOptions
+                .builder()
+                .endpoint(goffUrl)
+                .timeout(1000)
+                .build();
+
+        return  new GoFeatureFlagProvider(goFeatureFlagProviderOptions);
+    }
 
     @Bean
     public OpenFeatureAPI openFeatureAPI(
@@ -36,21 +52,14 @@ public class OpenFeatureConfiguration {
             throw new RuntimeException("Failed to set OpenFeature provider", e);
         }
 
+        openFeatureAPI.addHooks(CorporateHook.getInstance());
+
         return openFeatureAPI;
     }
 
-
     @Bean
-    public FeatureProvider goFeatureFlagProvider(
-        @org.springframework.beans.factory.annotation.Value("${notify.goff.url}") String goffUrl
-    ) throws InvalidOptions {
-
-        var goFeatureFlagProviderOptions = GoFeatureFlagProviderOptions
-                .builder()
-                .endpoint(goffUrl)
-                .timeout(1000)
-                .build();
-
-        return  new GoFeatureFlagProvider(goFeatureFlagProviderOptions);
+    public Client openFeatureClient(OpenFeatureAPI openFeatureAPI) {
+        return openFeatureAPI.getClient();
     }
+
 }
