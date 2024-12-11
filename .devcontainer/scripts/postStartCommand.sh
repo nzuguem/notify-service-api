@@ -5,6 +5,11 @@ set -e
 # Sourcing of fzf
 echo "source <(fzf --bash)" >> /home/$USER/.bashrc
 
-docker compose -f external-dependencies/compose.yml up --wait
+# Activate Completion of Task
+sudo sh -c 'task --completion bash > /etc/bash_completion.d/task'
+
+task start-external-dependencies
+
+task install-rabbitmq-admin-cli
 
 mvn clean package -DskipTests

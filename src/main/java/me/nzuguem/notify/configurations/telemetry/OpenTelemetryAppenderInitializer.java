@@ -1,4 +1,4 @@
-package me.nzuguem.notify.configurations;
+package me.nzuguem.notify.configurations.telemetry;
 
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;

@@ -18,7 +18,7 @@
       <captureArguments>true</captureArguments>
   </appender>
 
-  <root level="INFO">
+  <root level="${notify_log_level:-INFO}">
     <appender-ref ref="console"/>
     <appender-ref ref="OpenTelemetry"/>
   </root>

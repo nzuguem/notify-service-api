@@ -7,6 +7,8 @@ import org.springframework.test.context.DynamicPropertyRegistry;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.PostgreSQLContainer;
+import org.testcontainers.containers.RabbitMQContainer;
+import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
 
 @TestConfiguration(proxyBeanMethods = false)
@@ -22,7 +24,7 @@ public class TestcontainersConfiguration {
     @Bean
     @ServiceConnection
     PostgreSQLContainer<?> postgreSQLContainer() {
-        
+
         return new PostgreSQLContainer<>("postgres:16.5-alpine")
                 .withDatabaseName("customers")
                 .withUsername("customer")
@@ -32,6 +34,14 @@ public class TestcontainersConfiguration {
                         MountableFile.forHostPath("./external-dependencies/database/init/customer.sql"),
                         "/docker-entrypoint-initdb.d/1-customer-init.sql"
                 );
+    }
+
+    @Bean
+    @ServiceConnection
+    RabbitMQContainer rabbitMQContainer() {
+
+        return new RabbitMQContainer(DockerImageName.parse("rabbitmq:management-alpine"))
+                .withNetwork(NETWORK);
     }
 
     @Bean

@@ -8,6 +8,10 @@ end_of_line = lf
 insert_final_newline = true
 trim_trailing_whitespace = true
 
+[*.{yaml,yml}]
+indent_size = 2
+
+
 # documentation, utils
 [*.{md,mdx,diff}]
 trim_trailing_whitespace = false
