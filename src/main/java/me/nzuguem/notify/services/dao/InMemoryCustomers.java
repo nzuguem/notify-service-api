@@ -11,7 +11,7 @@ import me.nzuguem.notify.models.Customer;
 public class InMemoryCustomers implements Customers {
 
     private final static Map<String, Customer> CUSTOMERS = Map.ofEntries(
-        Map.entry("1", new Customer("1", "Nzuguem", "Kevin","kevin.nzuguem@example.com"))
+        Map.entry("1", new Customer("1", "Nzuguem", "Kevin","kevin.nzuguem@example.com", "0686991712"))
     );
 
     @Override
@@ -19,5 +19,5 @@ public class InMemoryCustomers implements Customers {
 
         return Optional.ofNullable(CUSTOMERS.get(id));
     }
-    
+
 }

@@ -30,6 +30,7 @@ public class SmtpSender implements Sender {
         this.templateRenderer = templateRenderer;
     }
 
+    @Override
     public void send(SenderRequest senderRequest) {
 
         try {

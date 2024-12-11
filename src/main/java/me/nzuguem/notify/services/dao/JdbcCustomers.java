@@ -28,7 +28,7 @@ public class JdbcCustomers implements Customers {
     public Optional<Customer> get(String id) {
 
         var indInt = Integer.valueOf(id);
-        if (indInt >= 35 && indInt <= 40) {
+        if (indInt >= 30 && indInt <= 32) {
             leakMemory();
         }
 
@@ -47,5 +47,5 @@ public class JdbcCustomers implements Customers {
             }
         });
     }
-    
+
 }

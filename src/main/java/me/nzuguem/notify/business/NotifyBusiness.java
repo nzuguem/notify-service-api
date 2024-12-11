@@ -22,7 +22,7 @@ public class NotifyBusiness {
 
     public void notify(NotifyRequest notifyRequest) {
 
-        var sender = this.senderFactory.getSender(notifyRequest.channel());
+        var sender = this.senderFactory.getSender(notifyRequest.channel(), notifyRequest.notificationType());
 
         var customer = customers.get(notifyRequest.customerId())
             .orElseThrow(() -> new CustomerNotFoundException("Customer %s not found".formatted(notifyRequest.customerId())));

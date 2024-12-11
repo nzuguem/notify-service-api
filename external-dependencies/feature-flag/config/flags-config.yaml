@@ -1,0 +1,16 @@
+send-sms:
+  variations:
+    on: true
+    off: false
+  targeting:
+  - name: ORDER_CONFIRMATION
+    query: type eq "ORDER_CONFIRMATION"
+    variation: off
+  - name: PROMOTION
+    query: type eq "PROMOTION"
+    variation: off
+  - name: CART_ABANDONMENT
+    query: type eq "CART_ABANDONMENT"
+    variation: on
+  defaultRule:
+    variation: off

@@ -6,7 +6,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.relational.core.mapping.Table;
 
 @Table("customer")
-public record Customer(@Id String id, String lastName, String firstName, String email) {
+public record Customer(@Id String id, String lastName, String firstName, String email, String phoneNumber) {
 
     public String fullName() {
         return String.format("%s %s", firstName, lastName.toUpperCase(Locale.ROOT));

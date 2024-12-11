@@ -70,7 +70,7 @@ tasks:
         curl --location 'http://localhost:8080/notify'
         --header 'Content-Type: application/json'
         --data '{
-            "customerId": "47",
+            "customerId": "10",
             "notificationType": "CART_ABANDONMENT",
             "channel": "SMTP",
             "context": {
@@ -84,7 +84,7 @@ tasks:
         curl --location 'http://localhost:8080/notify'
         --header 'Content-Type: application/json'
         --data '{
-            "customerId": "47",
+            "customerId": "15",
             "notificationType": "CART_ABANDONMENT",
             "channel": "SMS",
             "context": {
@@ -98,9 +98,25 @@ tasks:
         curl --location 'http://localhost:8080/notify'
         --header 'Content-Type: application/json'
         --data '{
-            "customerId": "37",
+            "customerId": "30",
             "notificationType": "PROMOTION",
             "channel": "SMTP",
+            "context": {
+                "deadline": "25/11/2015 - 23:59:59",
+                "promotionLink": "htts://shop.nzuguem.me/promotions/XYZ",
+                "percentage": "80"
+            }
+        }'
+
+  send-promotion-sms:
+    desc: Send Cart Abandonment Mail.
+    cmd: >-
+        curl --location 'http://localhost:8080/notify'
+        --header 'Content-Type: application/json'
+        --data '{
+            "customerId": "19",
+            "notificationType": "PROMOTION",
+            "channel": "SMS",
             "context": {
                 "deadline": "25/11/2015 - 23:59:59",
                 "promotionLink": "htts://shop.nzuguem.me/promotions/XYZ",
