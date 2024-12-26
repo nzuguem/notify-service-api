@@ -3,7 +3,7 @@ package me.nzuguem.notify.configurations;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.context.annotation.Bean;
-import org.springframework.test.context.DynamicPropertyRegistry;
+import org.springframework.test.context.DynamicPropertyRegistrar;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.PostgreSQLContainer;
@@ -45,20 +45,31 @@ public class TestcontainersConfiguration {
     }
 
     @Bean
-    GenericContainer<?> mailpitContainer(DynamicPropertyRegistry propertyRegistry) {
+    GenericContainer<?> mailpitContainer() {
 
-        var mailpitContainer = new GenericContainer<>("axllent/mailpit")
+        return new GenericContainer<>("axllent/mailpit")
                 .withNetwork(NETWORK)
                 .withNetworkAliases("mailpit")
                 .withExposedPorts(1025, 8025)
                 .withEnv("MP_MAX_MESSAGES", "5000")
                 .withEnv("MP_SMTP_AUTH_ACCEPT_ANY", "1")
                 .withEnv("MP_SMTP_AUTH_ALLOW_INSECURE", "1");
-
-        propertyRegistry.add("spring.mail.host", () -> "localhost");
-        propertyRegistry.add("spring.mail.port", () -> mailpitContainer.getMappedPort(1025));
-
-        return mailpitContainer;
     }
+
+    // https://github.com/spring-projects/spring-framework/issues/33501
+    // https://docs.spring.io/spring-framework/reference/testing/testcontext-framework/ctx-management/dynamic-property-sources.html
+
+    // Container beans are injected as arguments, because containers would have to be started before accessing their properties.
+    // And their lifecycle is managed by Spring Boot TestContainers and the ApplicationContext.
+    @Bean
+	DynamicPropertyRegistrar propertiesRegistrar(
+        GenericContainer<?> mailpitContainer
+        ) {
+		return registry -> {
+            // Spring Mail
+            registry.add("spring.mail.host", () -> "localhost");
+            registry.add("spring.mail.port", () -> mailpitContainer.getMappedPort(1025));
+        };
+	}
 
 }

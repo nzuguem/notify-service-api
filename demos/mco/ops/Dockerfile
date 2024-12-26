@@ -1,3 +1,4 @@
+## docker build -t nzuguem/java-runtime:21.0.5_11-jre -f demos/mco/ops/Dockerfile --push .
 FROM eclipse-temurin:21.0.5_11-jre
 
 ARG UID=10001
