@@ -107,6 +107,11 @@
             <artifactId>go-feature-flag</artifactId>
             <version>0.4.0</version>
         </dependency>
+        <dependency>
+            <groupId>dev.openfeature.contrib.hooks</groupId>
+            <artifactId>otel</artifactId>
+            <version>3.2.0</version>
+        </dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-docker-compose</artifactId>
@@ -165,6 +170,11 @@
             <plugin>
                 <groupId>org.graalvm.buildtools</groupId>
                 <artifactId>native-maven-plugin</artifactId>
+                <configuration>
+                    <buildArgs>
+                        <arg>-Ob</arg>
+                    </buildArgs>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>com.google.cloud.tools</groupId>
@@ -208,6 +218,20 @@
                         <phase>verify</phase>
                         <goals>
                             <goal>modernizer</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>software.xdev</groupId>
+                <artifactId>music-maven-plugin</artifactId>
+                <version>1.0.1</version>
+                <!-- You might also want to add <inherited>false</inherited> so not every child executes this -->
+                <executions>
+                    <execution>
+                        <phase>validate</phase>
+                        <goals>
+                            <goal>music</goal>
                         </goals>
                     </execution>
                 </executions>

@@ -43,7 +43,7 @@ tasks:
     cmd: mvn clean package
 
   build-app-native:
-    desc: Build Native Application.
+    desc: Build Application Native.
     cmd: mvn -Pnative native:compile
 
   run-app-with-tc-devservices:

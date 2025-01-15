@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 
 import dev.openfeature.sdk.Client;
 import dev.openfeature.sdk.MutableContext;
+import dev.openfeature.sdk.OpenFeatureAPI;
 import dev.openfeature.sdk.Value;
 import me.nzuguem.notify.models.Channel;
 import me.nzuguem.notify.models.Type;
@@ -23,10 +24,10 @@ public class SenderFactory {
 
     private final Client openFeatureClient;
 
-    public SenderFactory(SmsSender smsSender, SmtpSender smtpSender, Client openFeatureClient) {
+    public SenderFactory(SmsSender smsSender, SmtpSender smtpSender, OpenFeatureAPI openFeatureAPI) {
         this.smsSender = smsSender;
         this.smtpSender = smtpSender;
-        this.openFeatureClient = openFeatureClient;
+        this.openFeatureClient = openFeatureAPI.getClient();
     }
 
     public Sender getSender(Channel channel, Type type) {
@@ -38,6 +39,8 @@ public class SenderFactory {
     }
 
     private Sender toggleRouterSms(Type type) {
+
+        // this.openFeatureClient.addHooks(CorporateHook.get());
 
         var requestAttrs = new HashMap<String, Value>();
         requestAttrs.put("type", Value.objectToValue(type.name()));
