@@ -153,7 +153,7 @@ tasks:
     cmds:
     - sudo curl http://localhost:15672/cli/rabbitmqadmin -o /usr/local/bin/rabbitmqadmin
     - sudo chmod 777 /usr/local/bin/rabbitmqadmin
-    - sudo sh -c 'rabbitmqadmin --bash-completion > /etc/bash_completion.d/rabbitmqadmin'
+    # - sudo sh -c 'rabbitmqadmin --bash-completion > /etc/bash_completion.d/rabbitmqadmin'
 
   start-external-dependencies:
     desc: Start External Dependencies
