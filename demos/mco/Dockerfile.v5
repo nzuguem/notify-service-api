@@ -1,2 +1,2 @@
 ARG APP_NAME=notify-service-api
-FROM nzuguem/java-runtime:21.0.5_11-jre
+FROM nzuguem/java-runtime:21.0.5_11-v2

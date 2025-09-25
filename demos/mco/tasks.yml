@@ -7,7 +7,7 @@ tasks:
       VARIANT: '{{index .MATCH 0}}'
     desc: Build Image
     cmd: docker build -f demos/mco/Dockerfile.{{.VARIANT}} -t mco-{{.VARIANT}}-notify-service-api .
-  
+
   run-image/*/*:
     deps:
       - build-image/{{.VARIANT}}
@@ -15,4 +15,4 @@ tasks:
       VARIANT: '{{index .MATCH 0}}'
       ENV: '{{index .MATCH 1}}'
     desc: Run Image
-    cmd: docker run -it --net host $DOCKER_LOGS_OPTS  --rm  --env-file config-managment/{{.ENV}}.properties mco-{{.VARIANT}}-notify-service-api
+    cmd: docker run -it --net host $DOCKER_LOGS_OPTS  -v $(PWD)/demos/mco/ops/certs:/certificates --rm  --env-file config-managment/{{.ENV}}.properties mco-{{.VARIANT}}-notify-service-api
