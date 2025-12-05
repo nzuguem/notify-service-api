@@ -1,9 +1,11 @@
-## docker build -t nzuguem/java-runtime:21.0.5_11-v2 -f demos/mco/ops/Dockerfile.v2 --push .
+## docker build --platform linux/amd64,linux/arm64 -t nzuguem/java-runtime:21.0.5_11-v2-jaz -f demos/mco/ops/Dockerfile.v2 --push .
 FROM eclipse-temurin:21.0.5_11-jre
 
 ARG GLOWROOT_VERSION=0.14.5-beta.1
 ARG GLOWROOT_ZIP_NAME="glowroot-${GLOWROOT_VERSION}-dist.zip"
 ARG GLOWROOT_URL="https://github.com/glowroot/glowroot/releases/download/v${GLOWROOT_VERSION}/${GLOWROOT_ZIP_NAME}"
+
+COPY --from=mcr.microsoft.com/openjdk/jdk:21-ubuntu /usr/bin/jaz /usr/bin/jaz
 
 RUN <<EOF
 set -eux
@@ -39,7 +41,10 @@ WORKDIR /application
 
 ONBUILD ARG APP_NAME
 ONBUILD COPY target/$APP_NAME.jar ./app-original.jar
-ONBUILD RUN java -Djarmode=tools -jar app-original.jar extract --application-filename app.jar --force --destination ./
+ONBUILD RUN <<EOF
+java -Djarmode=tools -jar app-original.jar extract --application-filename app.jar --force --destination ./
+rm app-original.jar
+EOF
 
 COPY demos/mco/ops/run.v2.sh ./run.sh
 

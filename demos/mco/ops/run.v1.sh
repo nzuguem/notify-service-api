@@ -4,4 +4,8 @@ echo "Do something..."
 
 JAVA_OPTS="-Djava.security.edg=file:/dev/./urandom $JAVA_OPTS_APPEND"
 
-exec java ${JAVA_OPTS} -jar /application/app.jar  ${@}
+export JAZ_EXIT_WITHOUT_FLUSH=1 # Avoid send telemetry to MS
+echo "ℹ️️ JAZ dry-run..."
+echo "$(JAZ_DRY_RUN=1 jaz ${JAVA_OPTS} -jar /application/app.jar || true)"
+
+exec jaz ${JAVA_OPTS} -jar /application/app.jar  ${@}
