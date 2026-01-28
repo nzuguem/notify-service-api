@@ -6,7 +6,7 @@ tasks:
     vars:
       VARIANT: '{{index .MATCH 0}}'
     desc: Build Image
-    cmd: docker build -f demos/mco/Dockerfile.{{.VARIANT}} -t mco-{{.VARIANT}}-notify-service-api .
+    cmd: docker build --build-arg APP_NAME=notify-service-api -f demos/mco/Dockerfile.{{.VARIANT}} -t mco-{{.VARIANT}}-notify-service-api .
 
   run-image/*/*:
     deps:
