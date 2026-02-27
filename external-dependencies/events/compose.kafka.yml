@@ -1,0 +1,5 @@
+services:
+  kafka:
+    image: apache/kafka-native:4.2.0-rc4
+    ports:
+      - 9092:9092

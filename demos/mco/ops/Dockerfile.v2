@@ -1,5 +1,5 @@
 ## docker build --platform linux/amd64,linux/arm64 -t nzuguem/java-runtime:21.0.5_11-v2-jaz -f demos/mco/ops/Dockerfile.v2 --push .
-FROM eclipse-temurin:21.0.5_11-jre
+FROM eclipse-temurin:25
 
 ARG GLOWROOT_VERSION=0.14.5-beta.1
 ARG GLOWROOT_ZIP_NAME="glowroot-${GLOWROOT_VERSION}-dist.zip"

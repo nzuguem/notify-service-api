@@ -8,7 +8,7 @@
         "ghcr.io/devcontainers/features/java:1": {
             "installMaven" : true,
             "jdkDistro": "tem",
-            "version": "21"
+            "version": "25"
         },
         "ghcr.io/guiyomh/features/vim": {},
         "ghcr.io/devcontainers-extra/features/dive:1": {},

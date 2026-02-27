@@ -36,6 +36,6 @@ public record NotifyRequest(
                 .stream()
                 .filter(String::isBlank)
                 .findAny()
-                .ifPresent(__ -> {throw new ContextNoMatchTypeException("Parameters %s are mandatory for the notification type %s".formatted(contextKeysType, notificationType));});
+                .ifPresent(_ -> {throw new ContextNoMatchTypeException("Parameters %s are mandatory for the notification type %s".formatted(contextKeysType, notificationType));});
         }
 }

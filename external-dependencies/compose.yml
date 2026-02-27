@@ -3,4 +3,4 @@ include:
   - path: database/compose.yml
   - path: observability/compose.yml
   - path: feature-flag/compose.yml
-  - path: amqp/compose.yml
+  - path: events/compose.yml

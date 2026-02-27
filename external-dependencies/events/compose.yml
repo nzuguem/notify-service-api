@@ -1,0 +1,3 @@
+include:
+  - path: compose.rabbitmq.yml
+  - path: compose.kafka.yml

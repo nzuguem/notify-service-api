@@ -9,7 +9,6 @@ x-default-logging: &default-logging
 
 services:
   notify-service-api:
-    container_name: notify-service-api
     build:
       context: .
       dockerfile: Dockerfile.init

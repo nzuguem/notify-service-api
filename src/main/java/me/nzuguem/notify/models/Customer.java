@@ -9,6 +9,6 @@ import org.springframework.data.relational.core.mapping.Table;
 public record Customer(@Id String id, String lastName, String firstName, String email, String phoneNumber) {
 
     public String fullName() {
-        return String.format("%s %s", firstName, lastName.toUpperCase(Locale.ROOT));
+        return "%s %s".formatted(firstName, lastName.toUpperCase(Locale.ROOT));
     }
 }

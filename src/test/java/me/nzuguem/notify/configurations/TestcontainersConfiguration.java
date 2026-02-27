@@ -6,8 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.DynamicPropertyRegistrar;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.containers.RabbitMQContainer;
+import org.testcontainers.postgresql.PostgreSQLContainer;
+import org.testcontainers.rabbitmq.RabbitMQContainer;
 import org.testcontainers.utility.DockerImageName;
 import org.testcontainers.utility.MountableFile;
 
@@ -23,9 +23,9 @@ public class TestcontainersConfiguration {
 
     @Bean
     @ServiceConnection
-    PostgreSQLContainer<?> postgreSQLContainer() {
+    PostgreSQLContainer postgreSQLContainer() {
 
-        return new PostgreSQLContainer<>("postgres:16.5-alpine")
+        return new PostgreSQLContainer("postgres:16.5-alpine")
                 .withDatabaseName("customers")
                 .withUsername("customer")
                 .withPassword("customer")

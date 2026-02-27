@@ -1,4 +1,4 @@
-package me.nzuguem.notify.configurations.amqp;
+package me.nzuguem.notify.configurations.events;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;

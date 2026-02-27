@@ -82,7 +82,7 @@ tasks:
   send-cart-abandonment-mail-amqp:
     desc: Send Cart Abandonment Mail AMQP.
     cmd: >-
-      rabbitmqadmin publish -u myuser -p secret
+      $HOME/.local/bin/rabbitmqadmin publish -u myuser -p secret
       exchange=notify-exchange routing_key=email
       payload="{\"customerId\":\"10\",\"notificationType\":\"CART_ABANDONMENT\",\"channel\":\"SMTP\",\"context\":{\"products\":\"vodka, doritos\",\"cartLink\":\"htts://shop.nzuguem.me/carts/XYZ\"}}"
 
@@ -104,7 +104,7 @@ tasks:
   send-cart-abandonment-sms-amqp:
     desc: Send Cart Abandonment SMS AMQP.
     cmd: >-
-      rabbitmqadmin publish -u myuser -p secret
+      $HOME/.local/bin/rabbitmqadmin publish -u myuser -p secret
       exchange=notify-exchange routing_key=sms
       payload="{\"customerId\":\"15\",\"notificationType\":\"CART_ABANDONMENT\",\"channel\":\"SMS\",\"context\":{\"products\":\"vodka, doritos\",\"cartLink\":\"htts://shop.nzuguem.me/carts/XYZ\"}}"
 
@@ -144,15 +144,16 @@ tasks:
   send-promotion-sms-amqp:
     desc: Send Promotion SMS AMQP.
     cmd: >-
-      rabbitmqadmin publish -u myuser -p secret
+      $HOME/.local/bin/rabbitmqadmin publish -u myuser -p secret
       exchange=notify-exchange routing_key=sms
       payload="{\"customerId\":\"19\",\"notificationType\":\"PROMOTION\",\"channel\":\"SMS\",\"context\":{\"deadline\":\"25/11/2015 - 23:59:59\",\"promotionLink\":\"htts://shop.nzuguem.me/promotions/XYZ\",\"percentage\":\"80\"}}"
 
   install-rabbitmq-admin-cli:
     desc: Install RabbitMQ Admin CLI
     cmds:
-    - sudo curl http://localhost:15672/cli/rabbitmqadmin -o /usr/local/bin/rabbitmqadmin
-    - sudo chmod 777 /usr/local/bin/rabbitmqadmin
+    - mkdir -p $HOME/.local/bin
+    - curl http://localhost:15672/cli/rabbitmqadmin -o $HOME/.local/bin/rabbitmqadmin
+    - chmod 777 $HOME/.local/bin/rabbitmqadmin
     # - sudo sh -c 'rabbitmqadmin --bash-completion > /etc/bash_completion.d/rabbitmqadmin'
 
   start-external-dependencies:

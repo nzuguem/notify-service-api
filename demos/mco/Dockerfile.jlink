@@ -1,4 +1,4 @@
-FROM eclipse-temurin:21 AS runtime-builder
+FROM eclipse-temurin:25 AS runtime-builder
 
 WORKDIR /runtime
 

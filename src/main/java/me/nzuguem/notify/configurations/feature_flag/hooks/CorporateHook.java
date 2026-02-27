@@ -50,7 +50,7 @@ public class CorporateHook implements Hook<Object> {
     }
 
     @Override
-    public void finallyAfter(HookContext<Object> ctx, Map<String, Object> hints) {
+    public void finallyAfter(HookContext<Object> ctx, FlagEvaluationDetails<Object> details, Map<String, Object> hints) {
         LOGGER.info("Finally After Evaluation... {}", ctx.getFlagKey());
 
         this.otelSpan.end();
