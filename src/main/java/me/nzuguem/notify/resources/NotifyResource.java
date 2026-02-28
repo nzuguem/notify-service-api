@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
+import java.lang.Thread;
 import me.nzuguem.notify.business.NotifyBusiness;
 import me.nzuguem.notify.models.NotifyRequest;
 
@@ -48,7 +49,7 @@ public class NotifyResource {
 
         notifyRequest.validateContext();
 
-        this.notifyBusiness.notifyWithTransactionnalAnnotation(notifyRequest);
+        this.notifyBusiness.notifyWithTransactionalAnnotation(notifyRequest);
 
         this.slow(seconds);
 
@@ -60,10 +61,7 @@ public class NotifyResource {
 
         if (!Objects.isNull(seconds)) {
             LOGGER.info("⏳ Begin slow processing...");
-
-            Thread.currentThread()
-                .sleep(Duration.ofSeconds(seconds));
-
+            Thread.sleep(Duration.ofSeconds(seconds));
             LOGGER.info("I was slow 🦥, i waited {} seconds", seconds);
         }
 

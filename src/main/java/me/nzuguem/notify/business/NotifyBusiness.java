@@ -4,6 +4,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import io.opentelemetry.api.trace.SpanKind;
+import io.opentelemetry.api.trace.Tracer;
 import me.nzuguem.notify.exceptions.CustomerNotFoundException;
 import me.nzuguem.notify.models.NotifyRequest;
 import me.nzuguem.notify.models.SenderRequest;
@@ -14,15 +16,19 @@ import me.nzuguem.notify.services.notifications.factory.SenderFactory;
 public class NotifyBusiness {
 
     private final SenderFactory senderFactory;
-
     private final Customers customers;
-
     private final TransactionTemplate transactionTemplate;
+    private final Tracer otelTracer;
 
-    public NotifyBusiness(SenderFactory senderFactory, Customers customers, TransactionTemplate transactionTemplate) {
-        this.senderFactory = senderFactory;
-        this.customers = customers;
-        this.transactionTemplate = transactionTemplate;
+    public NotifyBusiness(
+        SenderFactory senderFactory,
+        Customers customers,
+        TransactionTemplate transactionTemplate,
+        Tracer otelTracer) {
+            this.senderFactory = senderFactory;
+            this.customers = customers;
+            this.transactionTemplate = transactionTemplate;
+            this.otelTracer = otelTracer;
     }
 
     public void notify(NotifyRequest notifyRequest) {
@@ -33,21 +39,29 @@ public class NotifyBusiness {
         // This means that any input/output operation after the database has been accessed will prolong the transaction, and therefore the connection to the database.
         // It is bad practice to depend on another external system in a transactional method
         // INFO  c.v.flexypool.FlexyPoolDataSource - Connection leased for 80 millis
-        var customer = this.transactionTemplate.execute((_) -> {
-            return customers.get(notifyRequest.customerId())
-                        .orElseThrow(() -> new CustomerNotFoundException("Customer %s not found".formatted(notifyRequest.customerId())));
-        });
+        var customer = this.transactionTemplate.execute(_-> customers.get(notifyRequest.customerId())
+                    .orElseThrow(() -> new CustomerNotFoundException("Customer %s not found".formatted(notifyRequest.customerId()))));
 
         var senderRequest = new SenderRequest(customer,
             notifyRequest.notificationType(),
             notifyRequest.channel(),
             notifyRequest.context());
 
-        sender.send(senderRequest);
+        var span = this.otelTracer.spanBuilder("send-notification")
+            .setSpanKind(SpanKind.CLIENT)
+            .setAttribute("customer.id", notifyRequest.customerId())
+            .setAttribute("notification.type", notifyRequest.notificationType().name())
+            .setAttribute("notification.channel", notifyRequest.channel().name())
+            .startSpan();
+        try(var _ = span.makeCurrent()) {
+            sender.send(senderRequest);
+        } finally {
+            span.end();
+        }
     }
 
     @Transactional // c.v.flexypool.FlexyPoolDataSource - Connection leased for 104 millis
-    public void notifyWithTransactionnalAnnotation(NotifyRequest notifyRequest) {
+    public void notifyWithTransactionalAnnotation(NotifyRequest notifyRequest) {
 
         var sender = this.senderFactory.getSender(notifyRequest.channel(), notifyRequest.notificationType());
 

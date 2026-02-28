@@ -20,11 +20,12 @@ public class ShareConsumerConfiguration {
     @Bean
     public ShareConsumerFactory<String, String> shareConsumerFactory(KafkaProperties kafkaProperties) {
         Map<String, Object> props = new HashMap<>();
+        var consumer = kafkaProperties.getConsumer();
         props.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaProperties.getBootstrapServers());
-        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, kafkaProperties.getConsumer().getKeyDeserializer());
-        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, kafkaProperties.getConsumer().getValueDeserializer());
-        props.put(ConsumerConfig.GROUP_ID_CONFIG, kafkaProperties.getConsumer().getGroupId());
-        props.put(ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG, "false");
+        props.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, consumer.getKeyDeserializer());
+        props.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, consumer.getValueDeserializer());
+        props.put(ConsumerConfig.GROUP_ID_CONFIG, consumer.getGroupId());
+        props.put(ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG, consumer.getProperties().get(ConsumerConfig.ALLOW_AUTO_CREATE_TOPICS_CONFIG));
         props.put(ConsumerConfig.SHARE_ACKNOWLEDGEMENT_MODE_CONFIG, "explicit");
         return new DefaultShareConsumerFactory<>(props);
     }

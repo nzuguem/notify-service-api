@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import me.nzuguem.notify.business.NotifyBusiness;
 import me.nzuguem.notify.configurations.events.AmqpConfiguration;
 import me.nzuguem.notify.models.NotifyRequest;
+import tools.jackson.core.JacksonException;
 import tools.jackson.databind.ObjectMapper;
 
 @Component
@@ -46,7 +47,7 @@ public class NotifyListener {
             this.notifyBusiness.notify(this.objectMapper.readValue(notifyRequest, NotifyRequest.class));
             acknowledgment.acknowledge();
         }
-        catch (UnsupportedOperationException exception) {
+        catch (UnsupportedOperationException | JacksonException exception) {
             LOGGER.error(exception.getMessage(), exception);
             acknowledgment.reject();
         }
