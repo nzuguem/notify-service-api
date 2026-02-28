@@ -9,6 +9,7 @@ import dev.openfeature.sdk.Client;
 import dev.openfeature.sdk.MutableContext;
 import dev.openfeature.sdk.OpenFeatureAPI;
 import dev.openfeature.sdk.Value;
+import me.nzuguem.notify.configurations.feature_flag.OpenFeatureConfiguration;
 import me.nzuguem.notify.models.Channel;
 import me.nzuguem.notify.models.Type;
 import me.nzuguem.notify.services.notifications.Sender;
@@ -27,7 +28,7 @@ public class SenderFactory {
     public SenderFactory(SmsSender smsSender, SmtpSender smtpSender, OpenFeatureAPI openFeatureAPI) {
         this.smsSender = smsSender;
         this.smtpSender = smtpSender;
-        this.openFeatureClient = openFeatureAPI.getClient();
+        this.openFeatureClient = openFeatureAPI.getClient(OpenFeatureConfiguration.OFREP_PROVIDER);
     }
 
     public Sender getSender(Channel channel, Type type) {

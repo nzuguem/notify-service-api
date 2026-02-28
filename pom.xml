@@ -99,6 +99,11 @@
             <version>1.1.1</version>
         </dependency>
         <dependency>
+            <groupId>dev.openfeature.contrib.providers</groupId>
+            <artifactId>ofrep</artifactId>
+            <version>0.0.1</version>
+        </dependency>
+        <dependency>
             <groupId>dev.openfeature.contrib.hooks</groupId>
             <artifactId>otel</artifactId>
             <version>3.3.1</version>

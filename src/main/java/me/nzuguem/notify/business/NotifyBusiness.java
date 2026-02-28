@@ -33,10 +33,8 @@ public class NotifyBusiness {
         // This means that any input/output operation after the database has been accessed will prolong the transaction, and therefore the connection to the database.
         // It is bad practice to depend on another external system in a transactional method
         // INFO  c.v.flexypool.FlexyPoolDataSource - Connection leased for 80 millis
-        var customer = this.transactionTemplate.execute((_) -> {
-            return customers.get(notifyRequest.customerId())
-                        .orElseThrow(() -> new CustomerNotFoundException("Customer %s not found".formatted(notifyRequest.customerId())));
-        });
+        var customer = this.transactionTemplate.execute(_-> customers.get(notifyRequest.customerId())
+                    .orElseThrow(() -> new CustomerNotFoundException("Customer %s not found".formatted(notifyRequest.customerId()))));
 
         var senderRequest = new SenderRequest(customer,
             notifyRequest.notificationType(),
@@ -47,7 +45,7 @@ public class NotifyBusiness {
     }
 
     @Transactional // c.v.flexypool.FlexyPoolDataSource - Connection leased for 104 millis
-    public void notifyWithTransactionnalAnnotation(NotifyRequest notifyRequest) {
+    public void notifyWithTransactionalAnnotation(NotifyRequest notifyRequest) {
 
         var sender = this.senderFactory.getSender(notifyRequest.channel(), notifyRequest.notificationType());
 

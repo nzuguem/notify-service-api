@@ -10,7 +10,6 @@ import org.springframework.stereotype.Component;
 import me.nzuguem.notify.business.NotifyBusiness;
 import me.nzuguem.notify.configurations.events.AmqpConfiguration;
 import me.nzuguem.notify.models.NotifyRequest;
-import tools.jackson.databind.ObjectMapper;
 
 @Component
 public class NotifyListener {
@@ -18,11 +17,9 @@ public class NotifyListener {
     private static final Logger LOGGER = LoggerFactory.getLogger(NotifyListener.class);
 
     private final NotifyBusiness notifyBusiness;
-    private final ObjectMapper objectMapper;
 
-    public NotifyListener(NotifyBusiness notifyBusiness, ObjectMapper objectMapper) {
+    public NotifyListener(NotifyBusiness notifyBusiness) {
         this.notifyBusiness = notifyBusiness;
-        this.objectMapper = objectMapper;
     }
 
     @RabbitListener(queues = {AmqpConfiguration.NOTIFY_QUEUE_SMS, AmqpConfiguration.NOTIFY_QUEUE_EMAIL})
@@ -41,9 +38,9 @@ public class NotifyListener {
         topics = "${app.kafka.topics.notifications}",
         containerFactory = "shareKafkaListenerContainerFactory"
     )
-    public void receiveMessageKafkaQueue(final String notifyRequest, ShareAcknowledgment acknowledgment) {
+    public void receiveMessageKafkaQueue(final NotifyRequest notifyRequest, ShareAcknowledgment acknowledgment) {
         try {
-            this.notifyBusiness.notify(this.objectMapper.readValue(notifyRequest, NotifyRequest.class));
+            this.notifyBusiness.notify(notifyRequest);
             acknowledgment.acknowledge();
         }
         catch (UnsupportedOperationException exception) {
