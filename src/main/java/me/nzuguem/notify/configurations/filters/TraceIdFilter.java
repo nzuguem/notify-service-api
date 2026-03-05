@@ -23,7 +23,7 @@ public class TraceIdFilter extends  OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        var traceId = getTraceId();
+        var traceId = this.getTraceId();
 
         if (traceId != null) {
             response.setHeader("X-Trace-Id", traceId);

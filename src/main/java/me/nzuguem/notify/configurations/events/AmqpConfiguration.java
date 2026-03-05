@@ -11,13 +11,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class AmqpConfiguration {
 
-    public static final String NOTIFY_EXCAHNGE = "notify-exchange";
+    public static final String NOTIFY_EXCHANGE = "notify-exchange";
     public static final String NOTIFY_QUEUE_SMS = "notify-queue-sms";
     public static final String NOTIFY_QUEUE_EMAIL = "notify-queue-email";
 
     @Bean
     public DirectExchange exchange() {
-        return new DirectExchange(NOTIFY_EXCAHNGE);
+        return new DirectExchange(NOTIFY_EXCHANGE);
     }
 
     @Bean

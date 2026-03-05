@@ -47,12 +47,11 @@ public class OpenFeatureConfiguration {
     @Bean(name=OFREP_PROVIDER)
     public FeatureProvider ofrepProvider(
         @org.springframework.beans.factory.annotation.Value("${notify.goff.url}") String goffUrl
-    ) throws InvalidOptions {
+    ) {
 
         var ofrepProviderOptions = OfrepProviderOptions
                 .builder()
                 .baseUrl(goffUrl)
-                .connectTimeout(Duration.ofSeconds(10))
                 .executor(Executors.newVirtualThreadPerTaskExecutor())
                 .build();
 
