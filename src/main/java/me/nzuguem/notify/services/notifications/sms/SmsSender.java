@@ -10,17 +10,20 @@ import me.nzuguem.notify.services.notifications.Sender;
 import me.nzuguem.notify.services.notifications.renderer.TemplateRenderer;
 
 @Service
-public class SmsSender implements Sender{
+public class SmsSender implements Sender {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SmsSender.class);
 
-    @Value("${notify.sms.from}")
-    private String from;
+    private final String from;
 
     private final TemplateRenderer templateRenderer;
 
-    public SmsSender(TemplateRenderer templateRenderer) {
+    public SmsSender(
+        TemplateRenderer templateRenderer,
+        @Value("${notify.sms.from}") String from
+    ) {
         this.templateRenderer = templateRenderer;
+        this.from = from;
     }
 
     @Override

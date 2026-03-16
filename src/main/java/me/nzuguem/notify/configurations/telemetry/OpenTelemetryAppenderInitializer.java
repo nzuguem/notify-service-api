@@ -1,10 +1,10 @@
 package me.nzuguem.notify.configurations.telemetry;
 
+import me.nzuguem.notify.configurations.ApplicationContextProvider;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
 
 import io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender;
-import me.nzuguem.notify.configurations.ApplicationContextProvider;
 
 // https://docs.spring.io/spring-boot/reference/actuator/loggers.html
 // https://github.com/open-telemetry/opentelemetry-java-instrumentation/tree/main/instrumentation/logback/logback-appender-1.0/library

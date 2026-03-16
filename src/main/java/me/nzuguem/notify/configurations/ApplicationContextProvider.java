@@ -1,5 +1,8 @@
 package me.nzuguem.notify.configurations;
 
+
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.NullUnmarked;
 import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
@@ -9,12 +12,13 @@ import io.opentelemetry.api.OpenTelemetry;
 
 
 @Component
+@NullUnmarked
 public  class ApplicationContextProvider implements ApplicationContextAware {
 
     private static ApplicationContext applicationContext;
 
     @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
+    public void setApplicationContext(@NonNull ApplicationContext applicationContext) throws BeansException {
         ApplicationContextProvider.applicationContext = applicationContext;
     }
 

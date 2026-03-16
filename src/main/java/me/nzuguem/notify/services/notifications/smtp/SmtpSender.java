@@ -17,17 +17,20 @@ public class SmtpSender implements Sender {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SmtpSender.class);
 
-    @Value("${notify.smtp.from}")
-    private String from;
+    private final String from;
 
     private final JavaMailSender mailSender;
 
     private final TemplateRenderer templateRenderer;
 
-    public SmtpSender(JavaMailSender mailSender,
-                    TemplateRenderer templateRenderer) {
+    public SmtpSender(
+        JavaMailSender mailSender,
+        TemplateRenderer templateRenderer,
+        @Value("${notify.smtp.from}") String from
+    ) {
         this.mailSender = mailSender;
         this.templateRenderer = templateRenderer;
+        this.from = from;
     }
 
     @Override

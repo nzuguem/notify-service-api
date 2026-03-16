@@ -11,12 +11,17 @@ import org.springframework.stereotype.Component;
 @Endpoint(id="env-infos")
 public class CorporateEndpoint {
 
-    @Value("${notify.env}")
-    private String env;
+    private final String env;
+
+    public CorporateEndpoint(
+        @Value("${notify.env}") String env
+    ) {
+        this.env = env;
+    }
 
     @ReadOperation
     public Map<String, String> getEnvInfos() {
         return Map.of("env", this.env);
     }
-    
+
 }

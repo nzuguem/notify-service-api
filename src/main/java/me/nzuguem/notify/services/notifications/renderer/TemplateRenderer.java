@@ -23,7 +23,7 @@ public class TemplateRenderer {
     public String render(Map<String, String> context, String templateName) {
 
         var output = new StringOutput();
-        this.templateEngine.render(templateName, Collections.<String, Object>unmodifiableMap(context), output);
+        this.templateEngine.render(templateName, Collections.unmodifiableMap(context), output);
 
         return output.toString();
     }
